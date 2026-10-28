@@ -17,10 +17,10 @@
 - [x] Implement Scenario Evaluation Service in `backend/app/engine/scenarios.py` (comparing current, recommended, DC-first, and cloud-prioritized scenarios).
 - [x] Author `docs/SCENARIOS.md` documenting metric definitions, cost formulas, sign conventions, headroom accounting, and dependency preservation.
 - [x] Add unit tests in `backend/tests/test_scenarios.py` with hand-calculated datasets (savings case, compliance-increase case, utilization accounting, dependency preservation; 28 tests total passing).
+- [x] Implement local data loading service (`backend/app/services/data_loader.py`), alert generator (`backend/app/engine/alerts.py`), and FastAPI routes (`backend/app/api/`) with CORS and full test coverage (`backend/tests/test_api.py`; 47 tests passing total).
 
 ## Next
 
-- [ ] Add local data loading service and FastAPI router endpoints in `backend/app/` (`/api/workloads`, `/api/recommendations`, `/api/scenarios`, `/api/alerts`).
 - [ ] Connect frontend to API and build workload inventory, detail view, scenario comparison, and review alerts.
 - [ ] Add compliance summary and methodology explanation views in frontend.
 - [ ] Inspect any supplied inventory locally if provided; map/document actual fields against the confirmed schema without uploading it.

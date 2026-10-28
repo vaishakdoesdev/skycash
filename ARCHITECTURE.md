@@ -6,18 +6,23 @@
   - `frontend/src/types/schema.ts`: TypeScript contracts mirroring backend Pydantic models.
 - `backend/app/`: FastAPI application.
   - `backend/app/models/`: Pydantic models (`schemas.py`) and enumerations (`enums.py`) defining core domain contracts and validation layer.
-  - `backend/app/engine/`: deterministic placement rules, compliance gates, capacity checks, and cost models.
+  - `backend/app/engine/`: deterministic placement rules, compliance gates, capacity checks, cost models, and alert generation.
     - `compliance.py`: non-negotiable residency, sensitivity, and certification evaluation.
     - `cost.py`: fully burdened private DC (with PUE) and public cloud cost formulas.
     - `capacity.py`: usable private DC headroom evaluation.
     - `dependencies.py`: union-find co-location clustering.
     - `evaluator.py`: deterministic decision pipeline and tie-breaking orchestrator.
-- `backend/tests/`: backend test suite (`test_health.py`, `test_schemas.py`, `test_engine.py`).
+    - `scenarios.py`: multi-scenario evaluation (baseline, recommended, DC-first, cloud-prioritized).
+    - `alerts.py`: deterministic review alert generation based on recommendation outcomes.
+  - `backend/app/services/`: local file data loading with fallback and caching (`data_loader.py`).
+  - `backend/app/api/`: REST routing (`routes.py`) and response envelope models (`response_models.py`).
+- `backend/tests/`: backend test suite (`test_health.py`, `test_schemas.py`, `test_engine.py`, `test_scenarios.py`, `test_api.py`).
 - `data/input/`: local-only confidential source inputs; ignored by Git.
 - `data/examples/`: safe schema references and handling notes.
 - `data/synthetic/`: deterministic, clearly labelled synthetic demonstration datasets.
 - `docs/DATA_DICTIONARY.md`: comprehensive domain data dictionary, unit specifications, and consistency documentation.
 - `docs/ALGORITHM.md`: formal algorithm documentation, cost formulas, tie-breaking order, and heuristic limitations.
+- `docs/SCENARIOS.md`: scenario evaluation metric definitions, headroom accounting, and formulas.
 
 ## Data flow
 
@@ -40,5 +45,6 @@ All processing runs locally. Confidential inventory is never transmitted to an e
 ## Current State
 
 - Data models, contracts, and synthetic demo datasets verified.
-- Deterministic decision engine implemented and verified with 20 backend tests passing.
+- Deterministic decision engine and multi-scenario evaluation service implemented and verified.
+- Local data loading service, review alerts, and FastAPI REST API routes verified with 47 backend tests passing.
 - Frontend TypeScript typecheck and production build pass cleanly.

@@ -1,3 +1,4 @@
+from app.engine.alerts import generate_review_alerts
 from app.engine.capacity import check_dc_capacity_fit
 from app.engine.compliance import ComplianceCheckResult, evaluate_placement_compliance
 from app.engine.cost import (
@@ -33,4 +34,5 @@ __all__ = [
     "evaluate_workloads",
     "evaluate_scenario",
     "evaluate_scenario_report",
+    "generate_review_alerts",
 ]

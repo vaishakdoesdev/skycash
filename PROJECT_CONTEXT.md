@@ -29,13 +29,14 @@
 ## Current facts
 
 - Python 3.14.2, Node.js 24.16.0, and npm 11.13.0 are installed.
-- Backend dependencies installed in `backend/.venv`; pytest runs cleanly (28 tests passed).
+- Backend dependencies installed in `backend/.venv`; pytest runs cleanly (47 tests passed).
 - Frontend dependencies installed in `frontend/node_modules`; typecheck and build pass cleanly.
 - Domain data models (9 core schemas + 4 scenario schemas) implemented in Pydantic and TypeScript.
 - Deterministic synthetic demo dataset is implemented and verified in `data/synthetic/`.
 - Deterministic decision engine implemented in `backend/app/engine/` and verified.
 - Scenario evaluation service implemented in `backend/app/engine/scenarios.py` and documented in `docs/SCENARIOS.md`.
-- Next focus is implementing local data loading service and FastAPI endpoints in `backend/app/`.
+- Local data loading service, alert generation, and FastAPI endpoints implemented and tested in `backend/app/` and `backend/tests/test_api.py`.
+- Next focus is connecting frontend to API and building UI views.
 
 ## Working agreement for future agents
 

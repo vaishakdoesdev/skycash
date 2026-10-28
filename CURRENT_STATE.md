@@ -14,6 +14,7 @@
     - `capacity.py`: Usable DC headroom checks for CPU, RAM, and persistent storage.
     - `dependencies.py`: Union-find mandatory co-location clustering and latency advisory checks.
     - `evaluator.py`: Deterministic decision pipeline with conflict checking, co-location preservation, explainability logging, and tie-breaking.
+    - `alerts.py`: Deterministic review alert generation for placement change, capacity breach, and review required triggers.
 - **Scenario Evaluation Service**:
   - Located under `backend/app/engine/scenarios.py`:
     - Evaluates estate-wide placements across 4 scenarios: Current Baseline, Recommended Feasible, Private-DC-First, and Cloud-Prioritized.
@@ -23,6 +24,20 @@
     - Evaluates mandatory co-location group preservation count and fraction.
     - Enforces zero compliance violations for recommended sets.
     - Flags incomplete operational assumptions (e.g. unconfirmed network egress).
+- **API & Data Loading Layer**:
+  - `backend/app/services/data_loader.py`: Local filesystem loading with fallback from `data/input/` to `data/synthetic/` and caching.
+  - `backend/app/api/response_models.py` & `backend/app/api/routes.py`: REST endpoints mounted in `backend/app/main.py` with CORS support for `localhost:5173`.
+  - Endpoints:
+    - `GET /health`: Health check.
+    - `GET /api/workloads`: Workload inventory with filters (environment, sensitivity, residency, search).
+    - `GET /api/workloads/{workload_id}`: Single workload + recommendation.
+    - `GET /api/recommendations`: Complete placement recommendations.
+    - `GET /api/recommendations/{workload_id}`: Recommendation for a specific workload.
+    - `GET /api/scenarios`: Full multi-scenario evaluation report.
+    - `GET /api/scenarios/{scenario_id}`: Individual scenario summary.
+    - `GET /api/utilisation`: Utilisation history with workload filter.
+    - `GET /api/alerts`: Review alerts based on recommendation outcomes.
+    - `GET /api/assumptions`: DC assumptions, cloud region configs, methodology, and limitations.
 - **Synthetic Demonstration Suite**:
   - Located under `data/synthetic/` with mock enterprise data: `workloads.json`, `dependencies.json`, `datacenter_assumptions.json`, `cloud_regions.json`, and `utilisation_history.json`.
 - **Frontend & Backend Toolchains**:
@@ -31,14 +46,14 @@
 
 ## Verification & Test Results
 
-- Backend tests: `cd backend; .venv\Scripts\python -m pytest -v` passes: **28 passed, 1 harmless warning** in 0.51s.
+- Backend tests: `backend\.venv\Scripts\python -m pytest -v` passes: **47 passed, 1 harmless warning** in 0.63s.
   - 1 health test (`test_health.py`).
   - 11 schema & synthetic data validation tests (`test_schemas.py`).
   - 12 decision engine tests covering all required edge cases A-G (`test_engine.py`).
   - 4 scenario evaluation tests covering hand-calculated savings, compliance premium, headroom accounting, and dependency preservation (`test_scenarios.py`).
+  - 19 API & data loader tests covering all route filters, details, errors, alerts, and caching (`test_api.py`).
 - Frontend checks: `cd frontend; npm run typecheck && npm run build` passes with zero errors.
 
 ## Next Step
 
-- Implement local data loading service and FastAPI router endpoints in `backend/app/` (`/api/workloads`, `/api/recommendations`, `/api/scenarios`, `/api/alerts`).
-- Connect frontend to API and build workload inventory, detail view, scenario comparison, and review alerts.
+- Connect frontend to API and build workload inventory, detail view, scenario comparison, review alerts, and methodology explanation views.

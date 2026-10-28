@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Unconfirmed workload input placeholder",
+  "description": "Intentionally unconstrained scaffold placeholder. This is not a schema for the supplied inventory. Confirm source fields and semantics locally before defining a contract.",
+  "type": "object",
+  "additionalProperties": true
+}

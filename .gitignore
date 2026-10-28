@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node / frontend build output
+node_modules/
+dist/
+.vite/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Confidential or generated local data
+data/input/*
+!data/input/.gitkeep
+!data/input/README.md
+data/private/
+data/processed/
+data/output/

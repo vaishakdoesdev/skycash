@@ -7,18 +7,23 @@
 - [x] Add local-only data locations and an explicitly unconfirmed schema placeholder.
 - [x] Validate scaffold JSON and Git ignore behavior; record environment check results.
 - [x] Install documented dependencies locally (backend `.venv` & frontend `node_modules`), run backend test (`pytest`) and frontend checks (`tsc`, `vite build`).
+- [x] Implement initial data model and validation layer (Pydantic in `backend/app/models/`, TypeScript contracts in `frontend/src/types/schema.ts`).
+- [x] Create clearly labelled deterministic synthetic demo datasets in `data/synthetic/` (workloads, dependencies graph, DC assumptions, cloud regions, utilization history).
+- [x] Author `docs/DATA_DICTIONARY.md` documenting all 9 domain schemas, units, explicit unknown representation, and consistency strategy.
+- [x] Add schema validation and synthetic data validation tests (`backend/tests/test_schemas.py`, 12 tests total passing).
+- [x] Implement deterministic placement decision engine in `backend/app/engine/` (compliance, cost, capacity, dependencies, evaluator).
+- [x] Author `docs/ALGORITHM.md` explaining cost formulas, eligibility rules, co-location clustering, tie-breaking, and heuristic limitations.
+- [x] Complete Prompt 2 Verification: Add and pass all 24 unit tests in `backend/tests/test_engine.py` covering Cases A through G, explainability, and determinism.
+- [x] Implement Scenario Evaluation Service in `backend/app/engine/scenarios.py` (comparing current, recommended, DC-first, and cloud-prioritized scenarios).
+- [x] Author `docs/SCENARIOS.md` documenting metric definitions, cost formulas, sign conventions, headroom accounting, and dependency preservation.
+- [x] Add unit tests in `backend/tests/test_scenarios.py` with hand-calculated datasets (savings case, compliance-increase case, utilization accounting, dependency preservation; 28 tests total passing).
 
 ## Next
 
-- [ ] Inspect the supplied inventory locally; document its actual fields, formats, units, and data classifications without uploading it.
-- [ ] Agree on normalized input and output models based only on confirmed source data and official rules.
-- [ ] Record cost, capacity, performance, residency, sensitivity, and dependency assumptions with an infrastructure lead.
-- [ ] Implement and test deterministic eligibility rules, including residency/sensitivity blocking and dependency co-location.
-- [ ] Implement auditable cost/capacity comparisons and current-versus-recommended explanations.
-- [ ] Add deterministic synthetic demo data and verify it against the confirmed model.
-- [ ] Add local data loading and API endpoints with input validation.
-- [ ] Build the workload inventory, detail, scenario, dependency, history, and review-alert views.
-- [ ] Add compliance and methodology views; verify that no migration action exists.
+- [ ] Add local data loading service and FastAPI router endpoints in `backend/app/` (`/api/workloads`, `/api/recommendations`, `/api/scenarios`, `/api/alerts`).
+- [ ] Connect frontend to API and build workload inventory, detail view, scenario comparison, and review alerts.
+- [ ] Add compliance summary and methodology explanation views in frontend.
+- [ ] Inspect any supplied inventory locally if provided; map/document actual fields against the confirmed schema without uploading it.
 
 ## Deferred / out of scope
 

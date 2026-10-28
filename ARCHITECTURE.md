@@ -2,32 +2,43 @@
 
 ## Proposed structure
 
-- `frontend/`: small React + TypeScript + Vite client.
-- `backend/app/`: FastAPI application and future request/response models.
-- `backend/app/engine/`: future deterministic placement rules and calculations; independent of HTTP and UI code.
-- `backend/tests/`: backend checks, including engine tests as it is added.
-- `data/input/`: local-only supplied inventory and other confidential source inputs; ignored by Git.
-- `data/examples/`: schema and handling notes only, not the supplied inventory.
-- `data/synthetic/`: reserved for deterministic synthetic demo data; no dataset is fabricated in this scaffold.
+- `frontend/`: React + TypeScript + Vite client.
+  - `frontend/src/types/schema.ts`: TypeScript contracts mirroring backend Pydantic models.
+- `backend/app/`: FastAPI application.
+  - `backend/app/models/`: Pydantic models (`schemas.py`) and enumerations (`enums.py`) defining core domain contracts and validation layer.
+  - `backend/app/engine/`: deterministic placement rules, compliance gates, capacity checks, and cost models.
+    - `compliance.py`: non-negotiable residency, sensitivity, and certification evaluation.
+    - `cost.py`: fully burdened private DC (with PUE) and public cloud cost formulas.
+    - `capacity.py`: usable private DC headroom evaluation.
+    - `dependencies.py`: union-find co-location clustering.
+    - `evaluator.py`: deterministic decision pipeline and tie-breaking orchestrator.
+- `backend/tests/`: backend test suite (`test_health.py`, `test_schemas.py`, `test_engine.py`).
+- `data/input/`: local-only confidential source inputs; ignored by Git.
+- `data/examples/`: safe schema references and handling notes.
+- `data/synthetic/`: deterministic, clearly labelled synthetic demonstration datasets.
+- `docs/DATA_DICTIONARY.md`: comprehensive domain data dictionary, unit specifications, and consistency documentation.
+- `docs/ALGORITHM.md`: formal algorithm documentation, cost formulas, tie-breaking order, and heuristic limitations.
 
 ## Data flow
 
-1. A user selects locally available source data or the future synthetic demo mode.
-2. The backend validates input against a schema confirmed from the actual source. The current schema file is deliberately unconstrained and is not that confirmed schema.
-3. The engine applies residency, sensitivity, and dependency/co-location rules to determine eligible placements before calculating cost, capacity, and performance-related comparisons.
-4. The engine returns the current-state comparison, recommendation, factors, assumptions, and review alerts as explainable data.
-5. The frontend presents the result for human review. No step writes to infrastructure or initiates a migration.
+1. A user selects locally available source data (under `data/input/`) or the deterministic synthetic demo mode (under `data/synthetic/`).
+2. The backend validates input against formal Pydantic data models (`backend/app/models/`). Any extra or malformed inputs are rejected.
+3. The deterministic engine applies residency, sensitivity, and mandatory co-location rules to determine eligible candidate placements before performing cost, capacity, and performance-related comparisons.
+4. The engine returns structured `PlacementRecommendation`, `ComplianceViolation`, `CostCapacityScenario`, and `ReviewAlert` objects with factors, assumptions, and plain-language audit explanations.
+5. The frontend displays results using mirrored TypeScript contracts (`frontend/src/types/schema.ts`). No step writes to infrastructure or initiates a migration.
 
-All steps are intended to run locally. No inventory is uploaded to an AI service, cloud service, or other external endpoint.
+All processing runs locally. Confidential inventory is never transmitted to an external service.
 
 ## Decision boundaries
 
-- The engine owns eligibility, calculations, placement comparisons, and explanations.
-- The API validates and transports data; it does not contain placement policy.
-- The UI displays engine results and user-selected scenarios; it does not reimplement policy.
-- Hard compliance constraints cannot be overridden by lower cost or other scores.
-- Assumptions, units, and rule versions must accompany results so a reviewer can challenge them.
+- **Engine Layer**: Owns eligibility checking, constraint evaluation, placement comparisons, cost formulas, and explainability audit trails.
+- **API Layer**: Validates input contracts, handles local file loading, and transports data; contains no business policy.
+- **Frontend Layer**: Renders engine results, alerts, and comparison scenarios; does not re-implement policy or placement logic.
+- **Hard vs. Soft Constraints**: Hard compliance constraints (data residency boundaries, sensitivity ceilings, mandatory co-location groups) cannot be overridden by lower cost or soft optimization preferences.
+- **Auditing**: Recommendations accompany explicit assumptions, calculation units (INR, GiB, vCPU), binding constraints, and rejected alternatives.
 
-## Current scaffold
+## Current State
 
-Only the project shell, documentation, a minimal API health endpoint, a frontend placeholder, and an unconstrained example-schema placeholder exist. There is no inventory parser, recommendation engine, scenario calculator, chart, cloud integration, migration capability, or real synthetic dataset yet.
+- Data models, contracts, and synthetic demo datasets verified.
+- Deterministic decision engine implemented and verified with 20 backend tests passing.
+- Frontend TypeScript typecheck and production build pass cleanly.

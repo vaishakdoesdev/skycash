@@ -68,6 +68,7 @@ class RecommendationStatus(str, Enum):
     INELIGIBLE = "INELIGIBLE"
     NO_CHANGE = "NO_CHANGE"
     CHANGE_RECOMMENDED = "CHANGE_RECOMMENDED"
+    REVIEW_REQUIRED = "REVIEW_REQUIRED"
 
 
 class ViolationSeverity(str, Enum):

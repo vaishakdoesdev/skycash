@@ -1,0 +1,156 @@
+[
+  {
+    "id": "wl-core-banking-db",
+    "name": "Core Banking Relational Database",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "RESTRICTED",
+    "residency_requirement": "KARNATAKA_DC_ONLY",
+    "required_certifications": [
+      "RBI_LOCALIZATION",
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 32.0,
+    "allocated_ram_gib": 256.0,
+    "allocated_storage_gib": 8192.0,
+    "storage_tier": "NVME",
+    "soft_preferences": null,
+    "tags": {
+      "tier": "database",
+      "criticality": "tier-0",
+      "team": "core-banking"
+    },
+    "notes": "Primary transactional database storing customer ledgers. Regulatory mandate requires retention in Karnataka facility."
+  },
+  {
+    "id": "wl-core-banking-api",
+    "name": "Core Banking Transaction API",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "CONFIDENTIAL",
+    "residency_requirement": "INDIA_ONLY",
+    "required_certifications": [
+      "RBI_LOCALIZATION",
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 16.0,
+    "allocated_ram_gib": 64.0,
+    "allocated_storage_gib": 500.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": null,
+      "target_monthly_budget": 50000.0,
+      "max_acceptable_wan_latency_ms": 5.0
+    },
+    "tags": {
+      "tier": "application",
+      "criticality": "tier-0",
+      "team": "core-banking"
+    },
+    "notes": "Direct transactional API service with strict sub-5ms latency dependency on Core Banking Database."
+  },
+  {
+    "id": "wl-customer-portal",
+    "name": "Customer Self-Service Web Portal",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "PUBLIC",
+    "residency_requirement": "ANY_APPROVED_REGION",
+    "required_certifications": [
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 8.0,
+    "allocated_ram_gib": 32.0,
+    "allocated_storage_gib": 200.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "AWS",
+      "target_monthly_budget": 25000.0,
+      "max_acceptable_wan_latency_ms": 50.0
+    },
+    "tags": {
+      "tier": "frontend",
+      "criticality": "tier-2",
+      "team": "digital-banking"
+    },
+    "notes": "Stateless web frontend handling customer balances and account inquiries."
+  },
+  {
+    "id": "wl-analytics-reporting",
+    "name": "Internal BI Analytics & Batch Engine",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "INTERNAL",
+    "residency_requirement": "INDIA_ONLY",
+    "required_certifications": [
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 24.0,
+    "allocated_ram_gib": 128.0,
+    "allocated_storage_gib": 4096.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": null,
+      "target_monthly_budget": 80000.0,
+      "max_acceptable_wan_latency_ms": 200.0
+    },
+    "tags": {
+      "tier": "batch",
+      "criticality": "tier-3",
+      "team": "business-intelligence"
+    },
+    "notes": "Nightly reporting extraction engine. Tolerates wide network latency."
+  },
+  {
+    "id": "wl-payment-gateway-proxy",
+    "name": "UPI & Payment Gateway Integration Proxy",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "CONFIDENTIAL",
+    "residency_requirement": "INDIA_ONLY",
+    "required_certifications": [
+      "RBI_LOCALIZATION",
+      "ISO27001",
+      "SOC2"
+    ],
+    "allocated_cpu_cores": 12.0,
+    "allocated_ram_gib": 48.0,
+    "allocated_storage_gib": 300.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "AWS",
+      "target_monthly_budget": 45000.0,
+      "max_acceptable_wan_latency_ms": 15.0
+    },
+    "tags": {
+      "tier": "proxy",
+      "criticality": "tier-1",
+      "team": "payments"
+    },
+    "notes": "Intermediary router connecting core banking to NPCI UPI network."
+  },
+  {
+    "id": "wl-dev-sandbox",
+    "name": "Developer Integration Sandbox",
+    "environment": "development",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "INTERNAL",
+    "residency_requirement": "ANY_APPROVED_REGION",
+    "required_certifications": [],
+    "allocated_cpu_cores": 4.0,
+    "allocated_ram_gib": 16.0,
+    "allocated_storage_gib": 150.0,
+    "storage_tier": "HDD",
+    "soft_preferences": {
+      "preferred_provider": null,
+      "target_monthly_budget": 10000.0,
+      "max_acceptable_wan_latency_ms": null
+    },
+    "tags": {
+      "tier": "sandbox",
+      "criticality": "tier-4",
+      "team": "engineering"
+    },
+    "notes": "Developer test environment with scrubbed non-production synthetic data."
+  }
+]

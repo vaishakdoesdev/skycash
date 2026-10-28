@@ -19,23 +19,23 @@
 
 ## Technical direction
 
-- Frontend: React + TypeScript + Vite, plain CSS initially.
-- Backend: Python + FastAPI; Pydantic for confirmed contracts.
-- Tests: pytest backend; frontend typecheck and production build.
-- Data: local files; no database at this stage.
-- Decision policy: explicit deterministic engine, separate from API and UI.
-- See `ARCHITECTURE.md` and `DECISIONS.md` for rationale and flow.
+- Frontend: React + TypeScript + Vite, plain CSS initially. Shared contracts in `frontend/src/types/schema.ts`.
+- Backend: Python + FastAPI; Pydantic models in `backend/app/models/` for strict contract validation (`extra="forbid"`).
+- Tests: pytest backend (`backend/tests/`); frontend typecheck (`tsc --noEmit`) and Vite production build.
+- Data: local files (`data/input/` for confidential sources, `data/synthetic/` for demo mode); no database at this stage.
+- Decision policy: explicit deterministic engine in `backend/app/engine/`, separate from API and UI.
+- Documentation: `docs/DATA_DICTIONARY.md`, `docs/ALGORITHM.md`, `docs/SCENARIOS.md`, `ARCHITECTURE.md`, `DECISIONS.md`.
 
 ## Current facts
 
-- The repository was initialized with Git and had no project files before scaffolding.
-- The supplied inventory is not present in the workspace and has not been inspected or loaded.
-- The actual input schema and assumptions remain unconfirmed.
-- Synthetic fallback data is planned but has not been fabricated or implemented.
 - Python 3.14.2, Node.js 24.16.0, and npm 11.13.0 are installed.
-- Backend dependencies are installed in `backend/.venv`; pytest runs cleanly (1 passed).
-- Frontend dependencies are installed in `frontend/node_modules`; typecheck and build pass cleanly.
-- Current implementation status, validation outcomes, and setup blockers are recorded in `CURRENT_STATE.md`.
+- Backend dependencies installed in `backend/.venv`; pytest runs cleanly (28 tests passed).
+- Frontend dependencies installed in `frontend/node_modules`; typecheck and build pass cleanly.
+- Domain data models (9 core schemas + 4 scenario schemas) implemented in Pydantic and TypeScript.
+- Deterministic synthetic demo dataset is implemented and verified in `data/synthetic/`.
+- Deterministic decision engine implemented in `backend/app/engine/` and verified.
+- Scenario evaluation service implemented in `backend/app/engine/scenarios.py` and documented in `docs/SCENARIOS.md`.
+- Next focus is implementing local data loading service and FastAPI endpoints in `backend/app/`.
 
 ## Working agreement for future agents
 

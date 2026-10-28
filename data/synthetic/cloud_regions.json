@@ -1,0 +1,95 @@
+[
+  {
+    "region_id": "aws-ap-south-1",
+    "provider": "AWS",
+    "region_name": "Asia Pacific (Mumbai)",
+    "location_country": "IN",
+    "location_city": "Mumbai",
+    "approval_status": "APPROVED",
+    "allowed_sensitivities": [
+      "PUBLIC",
+      "INTERNAL",
+      "CONFIDENTIAL"
+    ],
+    "supports_residency_in": [
+      "IN"
+    ],
+    "compliance_certifications": [
+      "RBI_LOCALIZATION",
+      "ISO27001",
+      "SOC2",
+      "MEITY_EMPANELLED"
+    ],
+    "currency": "INR",
+    "billing_period": "MONTHLY",
+    "compute_rate_per_vcpu_month": 1820.0,
+    "memory_rate_per_gib_month": 245.0,
+    "storage_ssd_rate_per_gib_month": 8.2,
+    "egress_rate_per_gib": 7.3,
+    "eligibility_rules": [
+      "Workloads requiring KARNATAKA_DC_ONLY cannot be hosted here.",
+      "Workloads with RESTRICTED data classification prohibited.",
+      "MeitY-empanelled cloud region eligible for approved Indian workloads."
+    ]
+  },
+  {
+    "region_id": "azure-central-india",
+    "provider": "Azure",
+    "region_name": "Central India (Pune)",
+    "location_country": "IN",
+    "location_city": "Pune",
+    "approval_status": "APPROVED",
+    "allowed_sensitivities": [
+      "PUBLIC",
+      "INTERNAL",
+      "CONFIDENTIAL"
+    ],
+    "supports_residency_in": [
+      "IN"
+    ],
+    "compliance_certifications": [
+      "RBI_LOCALIZATION",
+      "ISO27001",
+      "SOC2",
+      "MEITY_EMPANELLED"
+    ],
+    "currency": "INR",
+    "billing_period": "MONTHLY",
+    "compute_rate_per_vcpu_month": 1780.0,
+    "memory_rate_per_gib_month": 240.0,
+    "storage_ssd_rate_per_gib_month": 8.0,
+    "egress_rate_per_gib": 7.1,
+    "eligibility_rules": [
+      "Workloads requiring KARNATAKA_DC_ONLY cannot be hosted here.",
+      "Workloads with RESTRICTED classification prohibited."
+    ]
+  },
+  {
+    "region_id": "aws-us-east-1",
+    "provider": "AWS",
+    "region_name": "US East (N. Virginia)",
+    "location_country": "US",
+    "location_city": "N. Virginia",
+    "approval_status": "RESTRICTED",
+    "allowed_sensitivities": [
+      "PUBLIC"
+    ],
+    "supports_residency_in": [
+      "US",
+      "GLOBAL"
+    ],
+    "compliance_certifications": [
+      "ISO27001",
+      "SOC2"
+    ],
+    "currency": "INR",
+    "billing_period": "MONTHLY",
+    "compute_rate_per_vcpu_month": 1450.0,
+    "memory_rate_per_gib_month": 195.0,
+    "storage_ssd_rate_per_gib_month": 6.8,
+    "egress_rate_per_gib": 6.0,
+    "eligibility_rules": [
+      "Violates Indian data residency requirements. Prohibited for all workloads containing Indian data."
+    ]
+  }
+]

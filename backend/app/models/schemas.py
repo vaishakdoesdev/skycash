@@ -253,16 +253,26 @@ class PlacementRecommendation(BaseModel):
 
     workload_id: str = Field(..., description="Subject workload identifier.")
     current_placement: str = Field(..., description="Current deployment location.")
-    recommended_placement: str = Field(..., description="Optimal defensible target location.")
+    recommended_placement: Optional[str] = Field(
+        default=None,
+        description="Optimal defensible target location, or None if no feasible placement exists.",
+    )
     status: RecommendationStatus = Field(
         ...,
-        description="ELIGIBLE (candidate found), INELIGIBLE (blocked by compliance/capacity), NO_CHANGE, or CHANGE_RECOMMENDED.",
+        description="ELIGIBLE, INELIGIBLE, NO_CHANGE, CHANGE_RECOMMENDED, or REVIEW_REQUIRED.",
     )
 
     # Cost comparison (explicit currency and period)
     current_monthly_cost: float = Field(..., ge=0.0, description="Estimated monthly run cost in current location.")
-    recommended_monthly_cost: float = Field(..., ge=0.0, description="Projected monthly run cost in recommended placement.")
-    projected_monthly_savings: float = Field(..., description="Net variance (current - recommended). Positive indicates savings.")
+    recommended_monthly_cost: Optional[float] = Field(
+        default=None,
+        ge=0.0,
+        description="Projected monthly run cost in recommended placement, or None if ineligible.",
+    )
+    projected_monthly_savings: Optional[float] = Field(
+        default=None,
+        description="Net variance (current - recommended). Positive indicates savings. None if ineligible.",
+    )
     currency: Currency = Field(default=Currency.INR, description="Accounting currency.")
     billing_period: BillingPeriod = Field(default=BillingPeriod.MONTHLY, description="Standard billing cycle.")
 
@@ -283,8 +293,13 @@ class PlacementRecommendation(BaseModel):
     hard_compliance_passed: bool = Field(..., description="True only if all residency and sensitivity constraints are verified.")
 
     # Auditability & explainability
-    factors: list[str] = Field(..., description="Specific deterministic factors driving the recommendation.")
-    assumptions: list[str] = Field(..., description="Operational assumptions applied during evaluation.")
+    factors: list[str] = Field(default_factory=list, description="Specific deterministic factors driving the recommendation.")
+    binding_constraints: list[str] = Field(default_factory=list, description="Hard constraints that bounded or eliminated placements.")
+    assumptions: list[str] = Field(default_factory=list, description="Operational assumptions applied during evaluation.")
+    rejected_alternatives: dict[str, str] = Field(
+        default_factory=dict,
+        description="Map of rejected placement candidate IDs to explicit reason for rejection.",
+    )
     audit_explanation: str = Field(..., description="Human-readable rationale challengeable in under two minutes.")
     rule_engine_version: str = Field(default="0.1.0", description="Deterministic decision policy version.")
 
@@ -371,3 +386,120 @@ class ReviewAlert(BaseModel):
 
     status: AlertStatus = Field(default=AlertStatus.ACTIVE, description="Alert lifecycle state.")
     audit_rationale: str = Field(..., description="Deterministic decision path that triggered this alert.")
+
+
+# ==============================================================================
+# 10. Scenario Evaluation Schemas
+# ==============================================================================
+
+class OnPremiseResourceUtilization(BaseModel):
+    """Resource consumption and headroom analysis for the private data centre."""
+    model_config = ConfigDict(extra="forbid")
+
+    dimension: str = Field(..., description="Resource dimension name (e.g. 'CPU Cores', 'RAM', 'Persistent Storage').")
+    unit: str = Field(..., description="Measurement unit (e.g. 'cores', 'GiB').")
+    allocated: float = Field(..., ge=0.0, description="Aggregate resource allocated across all on-premise workloads.")
+    usable_capacity: float = Field(..., gt=0.0, description="Total usable capacity limit.")
+    total_capacity: float = Field(..., gt=0.0, description="Total physical installed capacity.")
+    utilization_pct: float = Field(..., ge=0.0, description="Percentage of usable capacity allocated.")
+    headroom: float = Field(..., description="Remaining usable headroom (usable_capacity - allocated). Negative if violated.")
+    is_violated: bool = Field(..., description="True if allocated exceeds usable capacity.")
+    violation_amount: float = Field(default=0.0, ge=0.0, description="Capacity deficit if violated; 0.0 otherwise.")
+
+
+class ScenarioPlacementBreakdown(BaseModel):
+    """Per-workload placement outcome within a scenario."""
+    model_config = ConfigDict(extra="forbid")
+
+    workload_id: str = Field(..., description="Workload identifier.")
+    workload_name: str = Field(..., description="Human-readable workload name.")
+    current_placement: str = Field(..., description="Current deployment location.")
+    assigned_placement: Optional[str] = Field(default=None, description="Assigned placement in this scenario, or None if unassigned.")
+    monthly_cost: float = Field(..., ge=0.0, description="Estimated monthly run cost in assigned placement.")
+    cost_delta_from_current: float = Field(..., description="Monthly cost delta (assigned - current). Negative = savings, Positive = increase.")
+    cost_delta_pct_from_current: Optional[float] = Field(default=None, description="Percentage cost variance from current baseline.")
+    is_compliant: bool = Field(..., description="True if assigned placement satisfies all hard compliance rules.")
+    compliance_violations: list[str] = Field(default_factory=list, description="Descriptions of any compliance breaches.")
+    assumptions: list[str] = Field(default_factory=list, description="Calculation assumptions applied.")
+
+
+class ScenarioSummary(BaseModel):
+    """Comprehensive evaluation of an estate-wide placement scenario."""
+    model_config = ConfigDict(extra="forbid")
+
+    scenario_id: str = Field(..., description="Unique scenario identifier.")
+    scenario_name: str = Field(..., description="Scenario display title.")
+    description: str = Field(..., description="Scenario premises and methodology description.")
+    
+    # Financial metrics
+    projected_monthly_cost: float = Field(..., ge=0.0, description="Projected aggregate estate monthly run cost.")
+    is_cost_estimate: bool = Field(default=True, description="Explicit disclaimer flag confirming metric is an estimate.")
+    cost_estimate_disclaimer: str = Field(
+        default="Projected estimate based on 720h/mo standard rates; not an actual billing statement.",
+        description="Legal and financial disclaimer.",
+    )
+    cost_difference_absolute: float = Field(
+        ...,
+        description="Absolute variance (scenario_cost - current_cost). Negative = cost reduction/savings, Positive = cost increase.",
+    )
+    cost_difference_pct: float = Field(
+        ...,
+        description="Percentage variance relative to current baseline ((scenario - current) / current * 100).",
+    )
+    sign_convention: str = Field(
+        default="Negative indicates cost reduction/savings compared to current baseline; positive indicates cost increase.",
+        description="Formal sign convention definition.",
+    )
+    currency: Currency = Field(default=Currency.INR, description="Cost currency denomination.")
+    billing_period: BillingPeriod = Field(default=BillingPeriod.MONTHLY, description="Standard billing interval.")
+
+    # Capacity and resource utilization
+    on_premise_utilization: list[OnPremiseResourceUtilization] = Field(
+        default_factory=list,
+        description="Dimension-by-dimension utilization breakdown for the Private DC.",
+    )
+    has_capacity_violations: bool = Field(..., description="True if any on-premise resource dimension exceeds usable capacity.")
+    capacity_violations_count: int = Field(default=0, ge=0, description="Number of breached resource dimensions.")
+
+    # Dependency preservation
+    mandatory_dependency_groups_total: int = Field(default=0, ge=0, description="Total mandatory co-location groups in estate.")
+    mandatory_dependency_groups_preserved: int = Field(default=0, ge=0, description="Mandatory groups kept co-located in this scenario.")
+    mandatory_dependency_groups_fraction: float = Field(
+        default=1.0,
+        ge=0.0,
+        le=1.0,
+        description="Fraction of mandatory groups preserved (1.0 = 100%).",
+    )
+
+    # Compliance
+    compliance_violations_count: int = Field(default=0, ge=0, description="Total hard compliance violations across all workloads.")
+    is_feasible: bool = Field(
+        ...,
+        description="True only if compliance_violations_count == 0, has_capacity_violations is False, and all dependencies are preserved.",
+    )
+
+    # Breakdown and audit
+    per_workload_breakdown: list[ScenarioPlacementBreakdown] = Field(
+        default_factory=list,
+        description="Workload-by-workload assignment, cost, and compliance audit trail.",
+    )
+    unconfirmed_metrics: list[str] = Field(
+        default_factory=list,
+        description="List of metrics subject to unconfirmed assumptions (e.g. unknown egress).",
+    )
+
+
+class ScenarioEvaluationReport(BaseModel):
+    """Aggregate comparison report evaluating current, recommended, and alternative scenarios."""
+    model_config = ConfigDict(extra="forbid")
+
+    generated_at: datetime = Field(..., description="Timestamp of report generation.")
+    currency: Currency = Field(default=Currency.INR, description="Reporting currency standard.")
+    billing_period: BillingPeriod = Field(default=BillingPeriod.MONTHLY, description="Duration interval standard.")
+    current_scenario: ScenarioSummary = Field(..., description="Baseline evaluation of current workload placements.")
+    recommended_scenario: ScenarioSummary = Field(..., description="Evaluation of decision-engine recommended placements.")
+    alternative_scenarios: list[ScenarioSummary] = Field(
+        default_factory=list,
+        description="Evaluations of meaningful alternative feasible scenarios.",
+    )
+    audit_notes: list[str] = Field(default_factory=list, description="General methodology and policy notes.")

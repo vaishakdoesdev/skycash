@@ -33,6 +33,12 @@ class PlacementType(str, Enum):
     PUBLIC_CLOUD = "PUBLIC_CLOUD"
 
 
+class PlacementStrategyMode(str, Enum):
+    """User-selected strategy mode for workload placement evaluation."""
+    CLOUD_ONLY = "CLOUD_ONLY"  # Hired servers only
+    HYBRID = "HYBRID"          # Local + hired servers
+
+
 class ApprovalStatus(str, Enum):
     """Administrative approval state of a hosting environment or region."""
     APPROVED = "APPROVED"

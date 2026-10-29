@@ -1,0 +1,132 @@
+[
+  {
+    "id": "wl-ms-vault-secrets",
+    "name": "Hardware Security Module & Vault",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "RESTRICTED",
+    "residency_requirement": "KARNATAKA_DC_ONLY",
+    "required_certifications": [
+      "RBI_LOCALIZATION",
+      "ISO27001",
+      "SOC2"
+    ],
+    "allocated_cpu_cores": 16.0,
+    "allocated_ram_gib": 64.0,
+    "allocated_storage_gib": 500.0,
+    "storage_tier": "NVME",
+    "soft_preferences": null,
+    "tags": {
+      "service": "security",
+      "tier": "tier-0",
+      "team": "secops"
+    },
+    "notes": "Cryptographic root of trust and customer encryption key store. Must reside in sovereign Karnataka facility."
+  },
+  {
+    "id": "wl-ms-auth-service",
+    "name": "Identity & OAuth Authorization Gateway",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "CONFIDENTIAL",
+    "residency_requirement": "INDIA_ONLY",
+    "required_certifications": [
+      "ISO27001",
+      "SOC2"
+    ],
+    "allocated_cpu_cores": 12.0,
+    "allocated_ram_gib": 48.0,
+    "allocated_storage_gib": 200.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "AWS",
+      "target_monthly_budget": 35000.0,
+      "max_acceptable_wan_latency_ms": 10.0
+    },
+    "tags": {
+      "service": "identity",
+      "tier": "tier-1",
+      "team": "security"
+    },
+    "notes": "Token exchange and session signing service; dependent on HSM key store."
+  },
+  {
+    "id": "wl-ms-kyc-ocr-pipeline",
+    "name": "Aadhaar & PAN Document OCR Extractor",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "CONFIDENTIAL",
+    "residency_requirement": "INDIA_ONLY",
+    "required_certifications": [
+      "RBI_LOCALIZATION",
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 28.0,
+    "allocated_ram_gib": 112.0,
+    "allocated_storage_gib": 3072.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "Azure",
+      "target_monthly_budget": 85000.0,
+      "max_acceptable_wan_latency_ms": 60.0
+    },
+    "tags": {
+      "service": "kyc",
+      "tier": "tier-1",
+      "team": "onboarding"
+    },
+    "notes": "Machine vision computer pipeline for sovereign customer verification."
+  },
+  {
+    "id": "wl-ms-partner-open-api",
+    "name": "Public Partner Integration & Open Banking API",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "PUBLIC",
+    "residency_requirement": "ANY_APPROVED_REGION",
+    "required_certifications": [
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 16.0,
+    "allocated_ram_gib": 64.0,
+    "allocated_storage_gib": 400.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "AWS",
+      "target_monthly_budget": 45000.0,
+      "max_acceptable_wan_latency_ms": 40.0
+    },
+    "tags": {
+      "service": "open-banking",
+      "tier": "tier-2",
+      "team": "partnerships"
+    },
+    "notes": "External third-party fintech integration endpoint."
+  },
+  {
+    "id": "wl-ms-wealth-management-engine",
+    "name": "Mutual Funds & Portfolio Advisory Engine",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "INTERNAL",
+    "residency_requirement": "INDIA_ONLY",
+    "required_certifications": [
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 24.0,
+    "allocated_ram_gib": 96.0,
+    "allocated_storage_gib": 1500.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "Azure",
+      "target_monthly_budget": 75000.0,
+      "max_acceptable_wan_latency_ms": 80.0
+    },
+    "tags": {
+      "service": "wealth",
+      "tier": "tier-2",
+      "team": "investments"
+    },
+    "notes": "Calculates tax loss harvesting and automated portfolio rebalancing."
+  }
+]

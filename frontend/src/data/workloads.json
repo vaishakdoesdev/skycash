@@ -1,0 +1,151 @@
+[
+  {
+    "id": "wl-core-banking-db",
+    "name": "Core Banking Ledger DB (PostgreSQL)",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "RESTRICTED",
+    "residency_requirement": "KARNATAKA_DC_ONLY",
+    "required_certifications": [
+      "RBI_LOCALIZATION",
+      "ISO27001",
+      "SOC2"
+    ],
+    "allocated_cpu_cores": 32.0,
+    "allocated_ram_gib": 256.0,
+    "allocated_storage_gib": 4000.0,
+    "storage_tier": "NVME",
+    "soft_preferences": null,
+    "tags": {
+      "business_unit": "Retail Banking",
+      "tier": "Tier-0",
+      "criticality": "Mission-Critical"
+    },
+    "notes": "Primary transactional database for real-time ledger balance and account settlement. Contains sensitive financial records subject to strict physical residency in Karnataka DC."
+  },
+  {
+    "id": "wl-core-banking-api",
+    "name": "Core Banking Transaction API Gateway",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "CONFIDENTIAL",
+    "residency_requirement": "KARNATAKA_DC_ONLY",
+    "required_certifications": [
+      "RBI_LOCALIZATION",
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 16.0,
+    "allocated_ram_gib": 64.0,
+    "allocated_storage_gib": 500.0,
+    "storage_tier": "SSD",
+    "soft_preferences": null,
+    "tags": {
+      "business_unit": "Retail Banking",
+      "tier": "Tier-0",
+      "criticality": "Mission-Critical"
+    },
+    "notes": "Synchronous gateway serving OLTP transactions. Hard requirement for sub-2ms network round-trip with the primary ledger DB."
+  },
+  {
+    "id": "wl-customer-portal",
+    "name": "Retail Customer Web & Mobile Portal",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "PUBLIC",
+    "residency_requirement": "ANY_APPROVED_REGION",
+    "required_certifications": [
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 8.0,
+    "allocated_ram_gib": 32.0,
+    "allocated_storage_gib": 200.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "AWS",
+      "target_monthly_budget": 15000.0,
+      "max_acceptable_wan_latency_ms": 30.0
+    },
+    "tags": {
+      "business_unit": "Digital Banking",
+      "tier": "Tier-1",
+      "criticality": "High"
+    },
+    "notes": "Stateless front-facing edge portal serving authenticated customer sessions. Public classification allows placement across any approved cloud region."
+  },
+  {
+    "id": "wl-analytics-reporting",
+    "name": "Regulatory & Management Reporting Pipeline",
+    "environment": "staging",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "CONFIDENTIAL",
+    "residency_requirement": "INDIA_ONLY",
+    "required_certifications": [
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 24.0,
+    "allocated_ram_gib": 128.0,
+    "allocated_storage_gib": 2500.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "Azure",
+      "target_monthly_budget": 35000.0,
+      "max_acceptable_wan_latency_ms": 100.0
+    },
+    "tags": {
+      "business_unit": "Risk & Compliance",
+      "tier": "Tier-2",
+      "criticality": "Medium"
+    },
+    "notes": "Nightly and month-end batch ETL aggregation pipeline. Idle during business hours with sharp compute peaks during reporting windows."
+  },
+  {
+    "id": "wl-document-archive",
+    "name": "Customer KYC Document Archive Store",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "CONFIDENTIAL",
+    "residency_requirement": "INDIA_ONLY",
+    "required_certifications": [
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 4.0,
+    "allocated_ram_gib": 16.0,
+    "allocated_storage_gib": 12000.0,
+    "storage_tier": "HDD",
+    "soft_preferences": {
+      "preferred_provider": "AWS",
+      "target_monthly_budget": 20000.0,
+      "max_acceptable_wan_latency_ms": 250.0
+    },
+    "tags": {
+      "business_unit": "Operations",
+      "tier": "Tier-3",
+      "criticality": "Standard"
+    },
+    "notes": "Long-term cold storage for scanned KYC documents, ID proofs, and compliance paperwork. Highly storage-heavy with low compute requirements."
+  },
+  {
+    "id": "wl-dev-sandbox",
+    "name": "Fintech Innovation Dev Sandbox",
+    "environment": "development",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "INTERNAL",
+    "residency_requirement": "ANY_APPROVED_REGION",
+    "required_certifications": [],
+    "allocated_cpu_cores": 12.0,
+    "allocated_ram_gib": 48.0,
+    "allocated_storage_gib": 400.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "AWS",
+      "target_monthly_budget": 12000.0,
+      "max_acceptable_wan_latency_ms": 50.0
+    },
+    "tags": {
+      "business_unit": "Engineering",
+      "tier": "Tier-3",
+      "criticality": "Low"
+    },
+    "notes": "Testing and staging sandbox for new feature validation using sanitized non-production dummy data."
+  }
+]

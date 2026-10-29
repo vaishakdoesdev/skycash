@@ -9,8 +9,10 @@
     "build": "tsc --noEmit && vite build"
   },
   "dependencies": {
+    "@types/three": "^0.186.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@types/react": "^19.1.0",

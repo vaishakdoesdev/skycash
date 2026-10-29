@@ -1,0 +1,50 @@
+[
+  {
+    "id": "usr_demo_butane",
+    "email": "demo@butane.io",
+    "name": "BUTANE Lead",
+    "password_hash": "pbkdf2_sha256$100000$a14bc4686d4e38b9f0cdf17e658d0270$e950941bc53de6a52df4a27c355d9d4f255a9e6c9da0b213585cb4d12a232d53",
+    "auth_provider": "local",
+    "created_at": "2026-10-28T22:37:24.418530+00:00"
+  },
+  {
+    "id": "usr_admin_skycash",
+    "email": "admin@skycash.io",
+    "name": "SkyCash Administrator",
+    "password_hash": "pbkdf2_sha256$100000$e60fb2851f409896d0f92cafa615dd30$c5f2cc540a0e6c9ef3dc22df41df13d2354d9f4b32cf3da7075237f50c63d8f7",
+    "auth_provider": "local",
+    "created_at": "2026-10-28T22:37:24.446497+00:00"
+  },
+  {
+    "id": "usr_410c243862cc",
+    "email": "testadmin@example.com",
+    "name": "Admin Test",
+    "password_hash": "pbkdf2_sha256$100000$4856cc9891fe5abdadebb2b77b4b361b$186513438cc2dcd3c744315a1ab44857552518fdeaffc32aeb8944a985aec307",
+    "auth_provider": "local",
+    "created_at": "2026-10-28T22:37:24.476935+00:00"
+  },
+  {
+    "id": "usr_873aa5077dde",
+    "email": "newuser@company.com",
+    "name": "New User",
+    "password_hash": "pbkdf2_sha256$100000$67823de446491554a105e7c64ed21374$568a5998f8a96565ceb4693374408f8e078ac7cd45a19f0939263687897a2de3",
+    "auth_provider": "local",
+    "created_at": "2026-10-28T22:38:00.574059+00:00"
+  },
+  {
+    "id": "usr_goog_3bfb564de5a7",
+    "email": "livegoogle@test.com",
+    "name": "Live Google User",
+    "password_hash": "",
+    "auth_provider": "google",
+    "created_at": "2026-10-28T23:13:39.673937+00:00"
+  },
+  {
+    "id": "usr_goog_c31725d94b38",
+    "email": "mvaishak2007@gmail.com",
+    "name": "Vaishak",
+    "password_hash": "",
+    "auth_provider": "google",
+    "created_at": "2026-10-28T23:16:09.730703+00:00"
+  }
+]

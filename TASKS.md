@@ -18,11 +18,18 @@
 - [x] Author `docs/SCENARIOS.md` documenting metric definitions, cost formulas, sign conventions, headroom accounting, and dependency preservation.
 - [x] Add unit tests in `backend/tests/test_scenarios.py` with hand-calculated datasets (savings case, compliance-increase case, utilization accounting, dependency preservation; 28 tests total passing).
 - [x] Implement local data loading service (`backend/app/services/data_loader.py`), alert generator (`backend/app/engine/alerts.py`), and FastAPI routes (`backend/app/api/`) with CORS and full test coverage (`backend/tests/test_api.py`; 47 tests passing total).
+- [x] Implement Strategy Mode Flow engine (Steps 1 & 2: `backend/app/engine/placement_modes.py`) evaluating Cloud-Only (hired servers) vs. Hybrid (local + hired) placements, detecting DC underutilisation or capacity overload, and selecting lowest-cost feasible recommendations with 7 unit tests (`backend/tests/test_placement_modes.py`; 54 tests passing total).
+- [x] Implement Strategy Mode Flow API endpoint (Step 3: `GET /api/flow/evaluation?mode=CLOUD_ONLY|HYBRID` in `backend/app/api/routes.py`) with 6 API tests covering default hybrid, cloud-only compliance rejection, case-insensitivity, 422 validation, and capacity overload (`backend/tests/test_api.py`; 60 tests passing total).
+- [x] Adapt backend to match uploaded frontend features without touching any frontend files:
+  - Added authentication endpoints (`/api/auth/config`, `/api/auth/me`, `/api/auth/login`, `/api/auth/register`, `/api/auth/logout`, `/api/auth/google`, `/api/auth/forgot-password`) using PBKDF2-SHA256 password hashing matching `authDevPlugin.js`, rate-limited login lockouts, and local session management.
+  - Added missing data endpoints (`GET /api/datacenter`, `GET /api/regions`, `GET /api/dependencies`, `GET /api/health`) expected by `frontend/src/services/api.ts`.
+  - Adapted `/api/workloads`, `/api/recommendations`, `/api/utilisation`, and `/api/alerts` to return raw array responses by default (`list[...]`), preserving wrapped responses when `?envelope=true` is requested.
+  - Extended API tests in `backend/tests/test_api.py` with 100% pass rate (65 passed across whole backend suite).
+  - Verified frontend build passes cleanly (`tsc --noEmit && vite build`).
 
 ## Next
 
-- [ ] Connect frontend to API and build workload inventory, detail view, scenario comparison, and review alerts.
-- [ ] Add compliance summary and methodology explanation views in frontend.
+- [ ] Connect strategy mode flow endpoint (`GET /api/flow/evaluation`) to dashboard UI when ready.
 - [ ] Inspect any supplied inventory locally if provided; map/document actual fields against the confirmed schema without uploading it.
 
 ## Deferred / out of scope

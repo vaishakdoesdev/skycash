@@ -1,0 +1,64 @@
+[
+  {
+    "region_id": "aws-ap-south-1",
+    "provider": "AWS",
+    "region_name": "Asia Pacific (Mumbai)",
+    "location_country": "IN",
+    "location_city": "Mumbai",
+    "approval_status": "APPROVED",
+    "allowed_sensitivities": [
+      "PUBLIC",
+      "INTERNAL",
+      "CONFIDENTIAL"
+    ],
+    "supports_residency_in": [
+      "IN"
+    ],
+    "compliance_certifications": [
+      "ISO27001",
+      "SOC2",
+      "PCI_DSS"
+    ],
+    "currency": "INR",
+    "billing_period": "MONTHLY",
+    "compute_rate_per_vcpu_month": 980.0,
+    "memory_rate_per_gib_month": 72.0,
+    "storage_ssd_rate_per_gib_month": 7.8,
+    "egress_rate_per_gib": 6.5,
+    "eligibility_rules": [
+      "Approved for India-sovereign workloads with sensitivity up to CONFIDENTIAL.",
+      "Prohibited for RESTRICTED workloads requiring physical Karnataka DC residency."
+    ]
+  },
+  {
+    "region_id": "azure-central-india",
+    "provider": "Azure",
+    "region_name": "Central India (Pune)",
+    "location_country": "IN",
+    "location_city": "Pune",
+    "approval_status": "APPROVED",
+    "allowed_sensitivities": [
+      "PUBLIC",
+      "INTERNAL",
+      "CONFIDENTIAL"
+    ],
+    "supports_residency_in": [
+      "IN"
+    ],
+    "compliance_certifications": [
+      "ISO27001",
+      "SOC2",
+      "HIPAA"
+    ],
+    "currency": "INR",
+    "billing_period": "MONTHLY",
+    "compute_rate_per_vcpu_month": 950.0,
+    "memory_rate_per_gib_month": 70.0,
+    "storage_ssd_rate_per_gib_month": 7.5,
+    "egress_rate_per_gib": 6.2,
+    "eligibility_rules": [
+      "Approved for secondary DR and analytics workloads with sensitivity up to CONFIDENTIAL.",
+      "Requires network encryption in transit."
+    ]
+  }
+]

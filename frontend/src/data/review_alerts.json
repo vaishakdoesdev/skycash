@@ -1,0 +1,47 @@
+[
+  {
+    "alert_id": "alert-001",
+    "workload_id": "wl-analytics-reporting",
+    "created_at": "2026-10-28T09:30:00Z",
+    "trigger_type": "PLACEMENT_CHANGED_OVER_TIME",
+    "severity": "WARNING",
+    "title": "Optimal placement changed from Private DC to Public Cloud",
+    "summary": "Historical telemetry indicates 65% idle time during business hours. Shifting to cloud elasticity saves 12,000 INR/month.",
+    "previous_placement": "karnataka-dc-1",
+    "new_placement": "azure-central-india",
+    "cost_delta": -12000.0,
+    "currency": "INR",
+    "status": "ACTIVE",
+    "audit_rationale": "Utilization history triggers dynamic tiering rule based on off-peak elasticity savings."
+  },
+  {
+    "alert_id": "alert-002",
+    "workload_id": "wl-document-archive",
+    "created_at": "2026-10-27T14:15:00Z",
+    "trigger_type": "CAPACITY_THRESHOLD_BREACHED",
+    "severity": "CRITICAL",
+    "title": "Private DC usable storage nearing 85% threshold",
+    "summary": "KYC document archive growth has consumed 12 TB of private SAN storage, driving local capacity past the 80% watermark.",
+    "previous_placement": "karnataka-dc-1",
+    "new_placement": "aws-ap-south-1",
+    "cost_delta": -16800.0,
+    "currency": "INR",
+    "status": "ACTIVE",
+    "audit_rationale": "Storage capacity watermark breach triggers proactive offload recommendation to S3 infrequent access."
+  },
+  {
+    "alert_id": "alert-003",
+    "workload_id": "wl-core-banking-api",
+    "created_at": "2026-10-25T11:00:00Z",
+    "trigger_type": "NEW_COMPLIANCE_RESTRICTION",
+    "severity": "INFO",
+    "title": "Cloud migration blocked by co-location constraint",
+    "summary": "API gateway has low sensitivity, but mandatory co-location with ledger DB enforces retention in Karnataka DC.",
+    "previous_placement": "karnataka-dc-1",
+    "new_placement": "karnataka-dc-1",
+    "cost_delta": 0.0,
+    "currency": "INR",
+    "status": "ACKNOWLEDGED",
+    "audit_rationale": "Mandatory co-location rule in group-core-banking blocks cloud evaluation."
+  }
+]

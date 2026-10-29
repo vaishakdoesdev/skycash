@@ -1,0 +1,158 @@
+[
+  {
+    "id": "wl-heavy-core-ledger",
+    "name": "High-Volume Core Ledger Master Node",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "RESTRICTED",
+    "residency_requirement": "KARNATAKA_DC_ONLY",
+    "required_certifications": [
+      "RBI_LOCALIZATION",
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 128.0,
+    "allocated_ram_gib": 1024.0,
+    "allocated_storage_gib": 32768.0,
+    "storage_tier": "NVME",
+    "soft_preferences": null,
+    "tags": {
+      "tier": "database",
+      "criticality": "tier-0",
+      "team": "core-banking"
+    },
+    "notes": "Massive scale-up of core database to handle 25,000 transactions/second during peak."
+  },
+  {
+    "id": "wl-heavy-payment-switch",
+    "name": "UPI & Card Payment Settlement Engine",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "RESTRICTED",
+    "residency_requirement": "INDIA_ONLY",
+    "required_certifications": [
+      "RBI_LOCALIZATION",
+      "ISO27001",
+      "PCI_DSS"
+    ],
+    "allocated_cpu_cores": 96.0,
+    "allocated_ram_gib": 512.0,
+    "allocated_storage_gib": 8192.0,
+    "storage_tier": "NVME",
+    "soft_preferences": {
+      "preferred_provider": "AWS",
+      "target_monthly_budget": 250000.0,
+      "max_acceptable_wan_latency_ms": 10.0
+    },
+    "tags": {
+      "tier": "payments",
+      "criticality": "tier-0",
+      "team": "payments"
+    },
+    "notes": "Payment switch processing massive holiday shopping transaction bursts."
+  },
+  {
+    "id": "wl-flash-sale-web-ingress",
+    "name": "Flash Sale Dynamic Edge API Ingress",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "PUBLIC",
+    "residency_requirement": "ANY_APPROVED_REGION",
+    "required_certifications": [
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 120.0,
+    "allocated_ram_gib": 480.0,
+    "allocated_storage_gib": 2048.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "AWS",
+      "target_monthly_budget": 180000.0,
+      "max_acceptable_wan_latency_ms": 20.0
+    },
+    "tags": {
+      "tier": "ingress",
+      "criticality": "tier-1",
+      "team": "digital-experience"
+    },
+    "notes": "High concurrency edge frontend handling millions of concurrent shopper sessions."
+  },
+  {
+    "id": "wl-fraud-detection-gpu-cluster",
+    "name": "Real-Time Neural Fraud Detector",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "CONFIDENTIAL",
+    "residency_requirement": "INDIA_ONLY",
+    "required_certifications": [
+      "ISO27001",
+      "SOC2"
+    ],
+    "allocated_cpu_cores": 80.0,
+    "allocated_ram_gib": 320.0,
+    "allocated_storage_gib": 4096.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "AWS",
+      "target_monthly_budget": 200000.0,
+      "max_acceptable_wan_latency_ms": 15.0
+    },
+    "tags": {
+      "tier": "fraud-ai",
+      "criticality": "tier-1",
+      "team": "risk-intelligence"
+    },
+    "notes": "Deep learning inference model evaluating velocity and botnet attack patterns."
+  },
+  {
+    "id": "wl-inventory-catalog-service",
+    "name": "Dynamic Product Catalog & Stock Cache",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "INTERNAL",
+    "residency_requirement": "ANY_APPROVED_REGION",
+    "required_certifications": [
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 64.0,
+    "allocated_ram_gib": 256.0,
+    "allocated_storage_gib": 1024.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "Azure",
+      "target_monthly_budget": 120000.0,
+      "max_acceptable_wan_latency_ms": 40.0
+    },
+    "tags": {
+      "tier": "catalog",
+      "criticality": "tier-1",
+      "team": "merchandising"
+    },
+    "notes": "In-memory distributed redis cluster for live inventory counts."
+  },
+  {
+    "id": "wl-realtime-bi-stream",
+    "name": "Kafka Event Streaming & Analytics Hub",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "INTERNAL",
+    "residency_requirement": "INDIA_ONLY",
+    "required_certifications": [
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 60.0,
+    "allocated_ram_gib": 240.0,
+    "allocated_storage_gib": 8192.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "AWS",
+      "target_monthly_budget": 150000.0,
+      "max_acceptable_wan_latency_ms": 100.0
+    },
+    "tags": {
+      "tier": "streaming",
+      "criticality": "tier-2",
+      "team": "data-platform"
+    },
+    "notes": "Real-time stream aggregation for flash sale orders and payment reconciliation."
+  }
+]

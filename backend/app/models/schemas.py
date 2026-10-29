@@ -12,6 +12,7 @@ from app.models.enums import (
     DataResidencyRequirement,
     DataSensitivity,
     DependencyType,
+    PlacementStrategyMode,
     PlacementType,
     RecommendationStatus,
     TimeGranularity,
@@ -503,3 +504,62 @@ class ScenarioEvaluationReport(BaseModel):
         description="Evaluations of meaningful alternative feasible scenarios.",
     )
     audit_notes: list[str] = Field(default_factory=list, description="General methodology and policy notes.")
+
+
+# ==============================================================================
+# 11. Placement Flow Evaluation Schema (Dashboard Mode Flow)
+# ==============================================================================
+
+class PlacementFlowEvaluation(BaseModel):
+    """Evaluation result for the hand-drawn dashboard placement logic flow.
+    Supports user selection between:
+      - CLOUD_ONLY ('Hired servers only')
+      - HYBRID ('Local + hired servers')
+    """
+    model_config = ConfigDict(extra="forbid")
+
+    mode: PlacementStrategyMode = Field(..., description="Selected strategy mode: CLOUD_ONLY or HYBRID.")
+    generated_at: datetime = Field(..., description="Timestamp of evaluation.")
+    currency: Currency = Field(default=Currency.INR, description="Reporting currency denomination.")
+    billing_period: BillingPeriod = Field(default=BillingPeriod.MONTHLY, description="Standard billing duration interval.")
+    
+    # Recommendation outcome
+    has_feasible_recommendation: bool = Field(..., description="True if at least one candidate scenario is fully feasible.")
+    recommended_scenario: Optional[ScenarioSummary] = Field(
+        default=None,
+        description="The winning lowest-cost feasible scenario, or None if all options fail.",
+    )
+    recommendation_rationale: str = Field(
+        ...,
+        description="Plain-language explanation of why this scenario was selected or why all options failed.",
+    )
+    
+    # Scenarios evaluated under this mode
+    evaluated_scenarios: list[ScenarioSummary] = Field(
+        ...,
+        description="Candidate scenarios evaluated under the chosen strategy mode.",
+    )
+    rejected_scenarios: dict[str, str] = Field(
+        default_factory=dict,
+        description="Map of scenario_id -> explicit plain-language rejection reasons for non-selected or infeasible alternatives.",
+    )
+    
+    # Capacity analysis (underutilisation, overload)
+    capacity_analysis: dict[str, str] = Field(
+        default_factory=dict,
+        description="Key observations regarding capacity utilization, underutilisation, or overload.",
+    )
+    
+    # Methodological transparency
+    assumptions: list[str] = Field(
+        default_factory=list,
+        description="Explicit calculation formulas and operational assumptions.",
+    )
+    limitations_disclaimer: str = Field(
+        default=(
+            "Heuristic Decision Support: The recommended option is the lowest-cost feasible candidate "
+            "evaluated by deterministic heuristic rules. It does not guarantee provably global mathematical optimality. "
+            "All pricing projections are based on standard 720h/month baselines and do not constitute billing invoices."
+        ),
+        description="Legal and algorithmic disclaimer.",
+    )

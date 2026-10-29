@@ -13,6 +13,12 @@ from app.engine.evaluator import (
     RULE_ENGINE_VERSION,
     evaluate_workloads,
 )
+from app.engine.placement_modes import (
+    evaluate_cloud_only_scenario,
+    evaluate_hybrid_scenario,
+    evaluate_local_only_scenario,
+    evaluate_placement_flow,
+)
 from app.engine.scenarios import (
     ESTIMATE_DISCLAIMER,
     SIGN_CONVENTION_NOTE,
@@ -35,4 +41,8 @@ __all__ = [
     "evaluate_scenario",
     "evaluate_scenario_report",
     "generate_review_alerts",
+    "evaluate_cloud_only_scenario",
+    "evaluate_hybrid_scenario",
+    "evaluate_local_only_scenario",
+    "evaluate_placement_flow",
 ]

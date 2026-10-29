@@ -1,0 +1,58 @@
+{
+  "nodes": [
+    "wl-core-banking-db",
+    "wl-core-banking-api",
+    "wl-customer-portal",
+    "wl-analytics-reporting",
+    "wl-document-archive",
+    "wl-dev-sandbox"
+  ],
+  "edges": [
+    {
+      "id": "dep-api-to-db",
+      "source_workload_id": "wl-core-banking-api",
+      "target_workload_id": "wl-core-banking-db",
+      "relationship_type": "CO_LOCATE",
+      "is_mandatory": true,
+      "max_tolerable_latency_ms": 2.0,
+      "data_exchange_gb_per_month": 450.0,
+      "notes": "Synchronous database queries during active banking transactions; strictly requires same-chassis or ultra-low LAN latency."
+    },
+    {
+      "id": "dep-portal-to-api",
+      "source_workload_id": "wl-customer-portal",
+      "target_workload_id": "wl-core-banking-api",
+      "relationship_type": "LOW_LATENCY",
+      "is_mandatory": false,
+      "max_tolerable_latency_ms": 30.0,
+      "data_exchange_gb_per_month": 120.0,
+      "notes": "User REST requests dispatched to core gateway. Can comfortably tolerate inter-city WAN latency (e.g. Mumbai to Bengaluru)."
+    },
+    {
+      "id": "dep-analytics-to-db",
+      "source_workload_id": "wl-analytics-reporting",
+      "target_workload_id": "wl-core-banking-db",
+      "relationship_type": "LOOSE_COUPLING",
+      "is_mandatory": false,
+      "max_tolerable_latency_ms": 150.0,
+      "data_exchange_gb_per_month": 300.0,
+      "notes": "Read-replica or asynchronous logical replication stream. Latency non-critical."
+    },
+    {
+      "id": "dep-portal-to-archive",
+      "source_workload_id": "wl-customer-portal",
+      "target_workload_id": "wl-document-archive",
+      "relationship_type": "LOOSE_COUPLING",
+      "is_mandatory": false,
+      "max_tolerable_latency_ms": 300.0,
+      "data_exchange_gb_per_month": 80.0,
+      "notes": "Asynchronous document upload and verification retrieval."
+    }
+  ],
+  "co_location_groups": {
+    "group-core-banking": [
+      "wl-core-banking-db",
+      "wl-core-banking-api"
+    ]
+  }
+}

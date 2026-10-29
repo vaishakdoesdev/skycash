@@ -29,14 +29,15 @@
 ## Current facts
 
 - Python 3.14.2, Node.js 24.16.0, and npm 11.13.0 are installed.
-- Backend dependencies installed in `backend/.venv`; pytest runs cleanly (47 tests passed).
-- Frontend dependencies installed in `frontend/node_modules`; typecheck and build pass cleanly.
-- Domain data models (9 core schemas + 4 scenario schemas) implemented in Pydantic and TypeScript.
+- Backend dependencies installed in `backend/.venv`; pytest runs cleanly (65 tests passed).
+- Frontend dependencies installed in `frontend/node_modules`; typecheck and build pass cleanly. Zero modifications made to frontend code.
+- Domain data models (9 core schemas, 5 scenario & flow schemas, and auth schemas) implemented in Pydantic.
 - Deterministic synthetic demo dataset is implemented and verified in `data/synthetic/`.
 - Deterministic decision engine implemented in `backend/app/engine/` and verified.
 - Scenario evaluation service implemented in `backend/app/engine/scenarios.py` and documented in `docs/SCENARIOS.md`.
-- Local data loading service, alert generation, and FastAPI endpoints implemented and tested in `backend/app/` and `backend/tests/test_api.py`.
-- Next focus is connecting frontend to API and building UI views.
+- Placement Strategy Mode Flow engine implemented in `backend/app/engine/placement_modes.py` supporting Cloud-Only vs. Hybrid comparisons, underutilisation/overload detection, and lowest-cost feasible recommendations.
+- Local data loading service, alert generation, authentication subsystem (`/api/auth/*`), and FastAPI endpoints (`/api/flow/evaluation`, `/api/datacenter`, `/api/regions`, `/api/dependencies`, `/api/workloads`, `/api/recommendations`, etc.) implemented and tested in `backend/app/` and `backend/tests/test_api.py`.
+- Backend endpoints return raw arrays by default to seamlessly fit frontend data consumer expectations (`api.ts`), with `?envelope=true` retained for wrapped schema access.
 
 ## Working agreement for future agents
 

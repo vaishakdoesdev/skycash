@@ -1,0 +1,175 @@
+[
+  {
+    "workload_id": "wl-core-banking-db",
+    "current_placement": "karnataka-dc-1",
+    "recommended_placement": "karnataka-dc-1",
+    "status": "NO_CHANGE",
+    "current_monthly_cost": 52640.0,
+    "recommended_monthly_cost": 52640.0,
+    "projected_monthly_savings": 0.0,
+    "currency": "INR",
+    "billing_period": "MONTHLY",
+    "capacity_allocated_cpu": 32.0,
+    "capacity_allocated_ram_gib": 256.0,
+    "capacity_allocated_storage_gib": 4000.0,
+    "co_location_group_id": "group-core-banking",
+    "co_located_workload_ids": [
+      "wl-core-banking-api"
+    ],
+    "hard_compliance_passed": true,
+    "factors": [
+      "Mandatory Karnataka DC residency (RBI regulatory localization)",
+      "Data sensitivity is RESTRICTED (prohibited from public cloud)",
+      "Anchor member of group-core-banking"
+    ],
+    "assumptions": [
+      "Private DC amortized rate: 850 INR/vCPU, 65 INR/GiB RAM, 2.2 INR/GiB storage",
+      "Power cooling overhead 15% accounted for in baseline"
+    ],
+    "audit_explanation": "Core banking ledger requires local physical hosting in Karnataka under RBI data localization guidelines. Disqualified from all public cloud regions.",
+    "rule_engine_version": "0.1.0"
+  },
+  {
+    "workload_id": "wl-core-banking-api",
+    "current_placement": "karnataka-dc-1",
+    "recommended_placement": "karnataka-dc-1",
+    "status": "NO_CHANGE",
+    "current_monthly_cost": 18860.0,
+    "recommended_monthly_cost": 18860.0,
+    "projected_monthly_savings": 0.0,
+    "currency": "INR",
+    "billing_period": "MONTHLY",
+    "capacity_allocated_cpu": 16.0,
+    "capacity_allocated_ram_gib": 64.0,
+    "capacity_allocated_storage_gib": 500.0,
+    "co_location_group_id": "group-core-banking",
+    "co_located_workload_ids": [
+      "wl-core-banking-db"
+    ],
+    "hard_compliance_passed": true,
+    "factors": [
+      "Mandatory co-location with wl-core-banking-db (group-core-banking)",
+      "Max round-trip latency ceiling: 2.0 ms",
+      "Synchronous OLTP transaction volume"
+    ],
+    "assumptions": [
+      "Private DC amortized rate: 850 INR/vCPU, 65 INR/GiB RAM, 2.2 INR/GiB storage"
+    ],
+    "audit_explanation": "Although data sensitivity is CONFIDENTIAL and could otherwise run in approved sovereign cloud, mandatory co-location with wl-core-banking-db requires co-residency in Karnataka DC to satisfy 2.0ms latency ceiling.",
+    "rule_engine_version": "0.1.0"
+  },
+  {
+    "workload_id": "wl-customer-portal",
+    "current_placement": "karnataka-dc-1",
+    "recommended_placement": "aws-ap-south-1",
+    "status": "CHANGE_RECOMMENDED",
+    "current_monthly_cost": 15800.0,
+    "recommended_monthly_cost": 12300.0,
+    "projected_monthly_savings": 3500.0,
+    "currency": "INR",
+    "billing_period": "MONTHLY",
+    "capacity_allocated_cpu": 8.0,
+    "capacity_allocated_ram_gib": 32.0,
+    "capacity_allocated_storage_gib": 200.0,
+    "co_location_group_id": null,
+    "co_located_workload_ids": [],
+    "hard_compliance_passed": true,
+    "factors": [
+      "Cost reduction in public cloud",
+      "Low data sensitivity (PUBLIC)",
+      "Preferred provider match (AWS)",
+      "Relieves 8 cores and 32 GiB RAM in private DC"
+    ],
+    "assumptions": [
+      "AWS ap-south-1 on-demand pricing standard tier",
+      "Egress bandwidth estimate: 420 GiB/month"
+    ],
+    "audit_explanation": "Customer web tier is stateless and public, saving 3,500 INR/month on public cloud without violating residency.",
+    "rule_engine_version": "0.1.0"
+  },
+  {
+    "workload_id": "wl-analytics-reporting",
+    "current_placement": "karnataka-dc-1",
+    "recommended_placement": "azure-central-india",
+    "status": "CHANGE_RECOMMENDED",
+    "current_monthly_cost": 34220.0,
+    "recommended_monthly_cost": 22220.0,
+    "projected_monthly_savings": 12000.0,
+    "currency": "INR",
+    "billing_period": "MONTHLY",
+    "capacity_allocated_cpu": 24.0,
+    "capacity_allocated_ram_gib": 128.0,
+    "capacity_allocated_storage_gib": 2500.0,
+    "co_location_group_id": null,
+    "co_located_workload_ids": [],
+    "hard_compliance_passed": true,
+    "factors": [
+      "Low average compute utilization (18.5%) favors cloud elasticity",
+      "Data sensitivity is CONFIDENTIAL (permitted in sovereign India region)",
+      "Preferred provider match (Azure)",
+      "Relieves 24 cores and 128 GiB RAM in private DC"
+    ],
+    "assumptions": [
+      "Azure Central India instance pricing with scheduled autoscaling",
+      "Asynchronous replication link to database accommodates up to 150ms latency"
+    ],
+    "audit_explanation": "Batch analytics workload runs idle outside reporting windows; shifting to elastic cloud tier in Azure Central India saves 12,000 INR/month while honoring India sovereign residency.",
+    "rule_engine_version": "0.1.0"
+  },
+  {
+    "workload_id": "wl-document-archive",
+    "current_placement": "karnataka-dc-1",
+    "recommended_placement": "aws-ap-south-1",
+    "status": "CHANGE_RECOMMENDED",
+    "current_monthly_cost": 30840.0,
+    "recommended_monthly_cost": 14040.0,
+    "projected_monthly_savings": 16800.0,
+    "currency": "INR",
+    "billing_period": "MONTHLY",
+    "capacity_allocated_cpu": 4.0,
+    "capacity_allocated_ram_gib": 16.0,
+    "capacity_allocated_storage_gib": 12000.0,
+    "co_location_group_id": null,
+    "co_located_workload_ids": [],
+    "hard_compliance_passed": true,
+    "factors": [
+      "Heavy storage footprint (12 TB) benefits from cloud tiered storage",
+      "Infrequent document access pattern",
+      "Relieves 28.5% of private DC usable SAN storage",
+      "CONFIDENTIAL data permitted in AWS Mumbai with SSE-KMS encryption"
+    ],
+    "assumptions": [
+      "AWS S3 standard-infrequent access tier pricing in ap-south-1",
+      "Low retrieval volume under 100 GiB/month"
+    ],
+    "audit_explanation": "Document archive consumes 28.5% of private DC usable SAN storage. Migrating cold records to encrypted object storage in AWS Mumbai relieves local storage pressure and saves 16,800 INR/month.",
+    "rule_engine_version": "0.1.0"
+  },
+  {
+    "workload_id": "wl-dev-sandbox",
+    "current_placement": "karnataka-dc-1",
+    "recommended_placement": "aws-ap-south-1",
+    "status": "CHANGE_RECOMMENDED",
+    "current_monthly_cost": 14200.0,
+    "recommended_monthly_cost": 10000.0,
+    "projected_monthly_savings": 4200.0,
+    "currency": "INR",
+    "billing_period": "MONTHLY",
+    "capacity_allocated_cpu": 12.0,
+    "capacity_allocated_ram_gib": 48.0,
+    "capacity_allocated_storage_gib": 400.0,
+    "co_location_group_id": null,
+    "co_located_workload_ids": [],
+    "hard_compliance_passed": true,
+    "factors": [
+      "Development lifecycle environment",
+      "Internal non-production data",
+      "Reclaims 12 compute cores and 48 GiB RAM for production DC needs"
+    ],
+    "assumptions": [
+      "Scheduled auto-shutdown outside business hours (09:00 - 19:00 IST)"
+    ],
+    "audit_explanation": "Development workloads do not require scarce Tier-3 private DC hardware. Relocating to AWS Mumbai frees up critical DC capacity and saves 4,200 INR/month.",
+    "rule_engine_version": "0.1.0"
+  }
+]

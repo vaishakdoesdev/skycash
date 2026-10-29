@@ -1,0 +1,20 @@
+{
+  "dc_id": "karnataka-dc-1",
+  "name": "Karnataka On-Premise Data Centre",
+  "location_country": "IN",
+  "location_state": "Karnataka",
+  "total_cpu_cores": 256.0,
+  "usable_cpu_cores": 224.0,
+  "total_ram_gib": 2048.0,
+  "usable_ram_gib": 1792.0,
+  "total_storage_gib": 50000.0,
+  "usable_storage_gib": 42000.0,
+  "currency": "INR",
+  "billing_period": "MONTHLY",
+  "amortized_cost_per_cpu_core_month": 850.0,
+  "amortized_cost_per_ram_gib_month": 65.0,
+  "amortized_cost_per_storage_gib_month": 2.2,
+  "power_cooling_pue_overhead_pct": 15.0,
+  "fixed_monthly_facility_cost": 180000.0,
+  "assumptions_notes": "Private data centre located in Bengaluru, Karnataka. Hardware capex amortized over a 36-month straight-line depreciation schedule. Operating expenses include power at PUE 1.35 (15% net overhead), dual fiber cross-connects, and 24x7 security monitoring."
+}

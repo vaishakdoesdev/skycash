@@ -128,9 +128,28 @@ When multiple candidate placements are feasible and deliver identical monthly co
 
 ---
 
-## 9. Verification & Test Coverage Matrix
+## 9. Strategy Mode Flow: Cloud-Only vs. Hybrid Placement
 
-The decision engine is verified against all core edge cases in [`backend/tests/test_engine.py`](file:///D:/skycash/backend/tests/test_engine.py):
+The engine exposes a dual-strategy evaluation workflow in [`backend/app/engine/placement_modes.py`](file:///D:/skycash/backend/app/engine/placement_modes.py):
+
+### 9.1 Mode A: Hired Servers Only (Cloud-Only)
+- Evaluates placing 100% of estate workloads into approved public cloud regions (`PublicCloudRegion`).
+- Evaluates mandatory co-location clusters jointly to ensure cluster members share the exact same cloud region.
+- Detects **Private DC Underutilisation**: Reports that on-premise hardware (cores, RAM, storage) remains 0.0% utilised, leaving amortized infrastructure idle while paying 100% operational cloud expenses.
+- **Compliance Enforcement**: If any workload requires `KARNATAKA_DC_ONLY` or has `RESTRICTED` sensitivity, the scenario is declared **INFEASIBLE** with explicit compliance violation reasons. It will never be recommended.
+
+### 9.2 Mode B: Local + Hired Servers (Hybrid)
+- Evaluates and compares two candidate alternatives:
+  1. **Local-Only Placement**: Places 100% of workloads on-premise. Detects **Capacity Overload** if combined resource demands exceed usable Private DC limits (reporting exact CPU, RAM, or storage deficits).
+  2. **Hybrid Placement**: Distributes workloads between the Private DC and public cloud, keeping regulated workloads local and bursting unconstrained workloads to cloud.
+- Recommends the **lowest-cost feasible option** between the evaluated candidates.
+- If all candidates are infeasible (e.g. an oversized local-only workload exceeds DC capacity and cannot run on cloud), the engine returns `recommended_scenario = None` and documents why each option failed.
+
+---
+
+## 10. Verification & Test Coverage Matrix
+
+The decision engine is verified across [`backend/tests/test_engine.py`](file:///D:/skycash/backend/tests/test_engine.py) and [`backend/tests/test_placement_modes.py`](file:///D:/skycash/backend/tests/test_placement_modes.py):
 
 | Verification Case | Test Function | Verified Behavior |
 | :--- | :--- | :--- |
@@ -144,5 +163,10 @@ The decision engine is verified against all core edge cases in [`backend/tests/t
 | **Case E (cont.): Missing Placement** | `test_workload_with_missing_current_placement_triggers_review_required` | Returns `REVIEW_REQUIRED` when `current_placement` is missing/UNKNOWN. |
 | **Case F: Equal Costs Tie-Breaking** | `test_tie_between_eligible_placements_uses_deterministic_tie_breaking` | Tests current placement preference and alphabetical fallback. |
 | **Case G: No Feasible Placement** | `test_no_feasible_placement_exists` | Reports `INELIGIBLE`, `recommended_placement: null`, and rejection log. |
-| **Explainability Payload** | `test_explainability_payload_contains_all_required_dimensions` | Confirms factors, binding constraints, assumptions, and rejected alternatives. |
-| **Determinism Guarantee** | `test_determinism_for_identical_inputs` | 100% identical outputs across repeated runs on identical inputs. |
+| **Strategy: Cloud-Only Rejection** | `test_cloud_only_compliance_rejection` | Detects compliance failure & DC underutilisation when local-mandated workloads exist. |
+| **Strategy: Cloud-Only Feasible** | `test_cloud_only_all_eligible` | Recommends cloud-only when all workloads meet cloud compliance rules. |
+| **Strategy: Local Capacity Overload** | `test_local_only_capacity_overload` | Flags capacity overload when local workloads exceed DC headroom. |
+| **Strategy: Hybrid Optimization** | `test_hybrid_selects_lowest_cost_feasible` | Recommends lowest-cost feasible compliant mix between local and cloud. |
+| **Strategy: All Infeasible** | `test_all_infeasible_scenario` | Explains rejection reasons when no candidate scenario can be placed feasibly. |
+| **Strategy: Co-Location in Cloud** | `test_cloud_only_mandatory_co_location` | Enforces shared cloud region placement for mandatory co-location clusters. |
+| **Strategy: Synthetic Dataset Flow** | `test_synthetic_dataset_placement_flow` | Verifies end-to-end flow on enterprise synthetic dataset. |

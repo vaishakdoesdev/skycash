@@ -1,0 +1,204 @@
+[
+  {
+    "id": "wl-core-ledger-db",
+    "name": "Core Banking Transaction Ledger",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "RESTRICTED",
+    "residency_requirement": "KARNATAKA_DC_ONLY",
+    "required_certifications": [
+      "RBI_LOCALIZATION",
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 32.0,
+    "allocated_ram_gib": 256.0,
+    "allocated_storage_gib": 8192.0,
+    "storage_tier": "NVME",
+    "soft_preferences": null,
+    "tags": {
+      "tier": "tier-0",
+      "criticality": "mission-critical",
+      "workload_type": "database"
+    },
+    "notes": "Core transactional ledger. Regulatory mandate requires permanent retention inside sovereign Karnataka DC."
+  },
+  {
+    "id": "wl-core-banking-api",
+    "name": "Core Banking API Gateway",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "CONFIDENTIAL",
+    "residency_requirement": "INDIA_ONLY",
+    "required_certifications": [
+      "RBI_LOCALIZATION",
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 16.0,
+    "allocated_ram_gib": 64.0,
+    "allocated_storage_gib": 500.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": null,
+      "target_monthly_budget": 50000.0,
+      "max_acceptable_wan_latency_ms": 2.0
+    },
+    "tags": {
+      "tier": "tier-0",
+      "criticality": "high",
+      "workload_type": "api"
+    },
+    "notes": "Requires mandatory sub-2ms co-location with Core Banking Transaction Ledger."
+  },
+  {
+    "id": "wl-customer-kyc-db",
+    "name": "Customer KYC & Aadhaar Vault (Misplaced on Cloud)",
+    "environment": "production",
+    "current_placement": "aws-ap-south-1",
+    "data_sensitivity": "RESTRICTED",
+    "residency_requirement": "KARNATAKA_DC_ONLY",
+    "required_certifications": [
+      "RBI_LOCALIZATION",
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 16.0,
+    "allocated_ram_gib": 128.0,
+    "allocated_storage_gib": 4096.0,
+    "storage_tier": "SSD",
+    "soft_preferences": null,
+    "tags": {
+      "tier": "tier-0",
+      "audit_flag": "repatriation-needed",
+      "workload_type": "database"
+    },
+    "notes": "Currently running on AWS Mumbai in breach of corporate Karnataka DC data residency mandate. Repatriation required."
+  },
+  {
+    "id": "wl-customer-web-portal",
+    "name": "Customer Web Portal (Overprovisioned On-Prem)",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "PUBLIC",
+    "residency_requirement": "ANY_APPROVED_REGION",
+    "required_certifications": [
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 12.0,
+    "allocated_ram_gib": 48.0,
+    "allocated_storage_gib": 300.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "AWS",
+      "target_monthly_budget": 35000.0,
+      "max_acceptable_wan_latency_ms": 50.0
+    },
+    "tags": {
+      "tier": "tier-2",
+      "criticality": "medium",
+      "workload_type": "frontend"
+    },
+    "notes": "Public facing web portal; candidate for public cloud autoscaling."
+  },
+  {
+    "id": "wl-fraud-ml-inference",
+    "name": "Fraud Detection Inference Engine",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "CONFIDENTIAL",
+    "residency_requirement": "INDIA_ONLY",
+    "required_certifications": [
+      "ISO27001",
+      "SOC2"
+    ],
+    "allocated_cpu_cores": 24.0,
+    "allocated_ram_gib": 96.0,
+    "allocated_storage_gib": 1024.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "Azure",
+      "target_monthly_budget": 75000.0,
+      "max_acceptable_wan_latency_ms": 25.0
+    },
+    "tags": {
+      "tier": "tier-1",
+      "criticality": "high",
+      "workload_type": "machine-learning"
+    },
+    "notes": "Real-time payment fraud inference scoring."
+  },
+  {
+    "id": "wl-statement-batch-worker",
+    "name": "Nightly Statement Batch Worker",
+    "environment": "production",
+    "current_placement": "aws-ap-south-1",
+    "data_sensitivity": "INTERNAL",
+    "residency_requirement": "INDIA_ONLY",
+    "required_certifications": [
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 16.0,
+    "allocated_ram_gib": 64.0,
+    "allocated_storage_gib": 2048.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "Azure",
+      "target_monthly_budget": 45000.0,
+      "max_acceptable_wan_latency_ms": 200.0
+    },
+    "tags": {
+      "tier": "tier-3",
+      "criticality": "low",
+      "workload_type": "batch"
+    },
+    "notes": "Batch job running at midnight; tolerant of latency and suitable for lowest-cost cloud region."
+  },
+  {
+    "id": "wl-mobile-app-bff",
+    "name": "Mobile Banking Backend-for-Frontend",
+    "environment": "production",
+    "current_placement": "karnataka-dc-1",
+    "data_sensitivity": "CONFIDENTIAL",
+    "residency_requirement": "INDIA_ONLY",
+    "required_certifications": [
+      "ISO27001"
+    ],
+    "allocated_cpu_cores": 16.0,
+    "allocated_ram_gib": 64.0,
+    "allocated_storage_gib": 400.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "AWS",
+      "target_monthly_budget": 50000.0,
+      "max_acceptable_wan_latency_ms": 30.0
+    },
+    "tags": {
+      "tier": "tier-1",
+      "criticality": "medium",
+      "workload_type": "api"
+    },
+    "notes": "Aggregates customer account services for the iOS and Android banking app."
+  },
+  {
+    "id": "wl-developer-sandbox",
+    "name": "Engineering Ephemeral Sandbox",
+    "environment": "development",
+    "current_placement": "aws-ap-south-1",
+    "data_sensitivity": "PUBLIC",
+    "residency_requirement": "ANY_APPROVED_REGION",
+    "required_certifications": [],
+    "allocated_cpu_cores": 8.0,
+    "allocated_ram_gib": 32.0,
+    "allocated_storage_gib": 200.0,
+    "storage_tier": "SSD",
+    "soft_preferences": {
+      "preferred_provider": "AWS",
+      "target_monthly_budget": 20000.0,
+      "max_acceptable_wan_latency_ms": 100.0
+    },
+    "tags": {
+      "tier": "tier-3",
+      "criticality": "non-critical",
+      "workload_type": "staging"
+    },
+    "notes": "Developer test cluster using sanitized mock fixtures."
+  }
+]

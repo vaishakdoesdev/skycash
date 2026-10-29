@@ -59,6 +59,32 @@ class AuthService {
     return null;
   }
 
+  private async parseJsonResponse(res: Response, fallbackError: string): Promise<any> {
+    const text = await res.text();
+    let data: any;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error(
+        res.status === 404
+          ? 'Backend API not reachable. Please ensure your backend server is deployed and linked via vercel.json.'
+          : `${fallbackError} (Server returned non-JSON HTTP ${res.status})`
+      );
+    }
+    if (!res.ok) {
+      const detail = data?.detail || data;
+      const message =
+        typeof detail === 'string'
+          ? detail
+          : detail?.message || data?.message || fallbackError;
+      const code = typeof detail === 'object' ? detail?.code : undefined;
+      const err = new Error(message) as Error & { code?: string };
+      if (code) err.code = code;
+      throw err;
+    }
+    return data;
+  }
+
   async login(email: string, password: string, rememberMe: boolean = false): Promise<AuthResponse> {
     const res = await fetch('/api/auth/login', {
       method: 'POST',
@@ -67,12 +93,7 @@ class AuthService {
       body: JSON.stringify({ email, password, remember_me: rememberMe }),
     });
 
-    const data = await res.json();
-    if (!res.ok) {
-      const message = typeof data.detail === 'string' ? data.detail : data.detail?.message || 'Login failed.';
-      throw new Error(message);
-    }
-
+    const data = await this.parseJsonResponse(res, 'Login failed.');
     if (data.token) {
       this.setToken(data.token);
     }
@@ -87,12 +108,7 @@ class AuthService {
       body: JSON.stringify({ email, password, name }),
     });
 
-    const data = await res.json();
-    if (!res.ok) {
-      const message = typeof data.detail === 'string' ? data.detail : data.detail?.message || 'Registration failed.';
-      throw new Error(message);
-    }
-
+    const data = await this.parseJsonResponse(res, 'Registration failed.');
     if (data.token) {
       this.setToken(data.token);
     }
@@ -119,16 +135,7 @@ class AuthService {
       body: JSON.stringify({ credential }),
     });
 
-    const data = await res.json();
-    if (!res.ok) {
-      const detail = data.detail || data;
-      const message = typeof detail === 'string' ? detail : detail?.message || 'Google sign-in could not be completed.';
-      const code = typeof detail === 'object' ? detail.code : undefined;
-      const err = new Error(message) as Error & { code?: string };
-      if (code) err.code = code;
-      throw err;
-    }
-
+    const data = await this.parseJsonResponse(res, 'Google sign-in could not be completed.');
     if (data.token) {
       this.setToken(data.token);
     }
@@ -142,7 +149,7 @@ class AuthService {
       credentials: 'include',
       body: JSON.stringify({ email }),
     });
-    return await res.json();
+    return await this.parseJsonResponse(res, 'Failed to submit reset request.');
   }
 }
 

@@ -29,14 +29,11 @@ import { ScenarioSimulator } from './components/ScenarioSimulator';
 import { ReviewAlertsView } from './components/ReviewAlertsView';
 import { MethodologyView } from './components/MethodologyView';
 import { InventoryUploader } from './components/InventoryUploader';
-import { AuthProvider, useAuth } from './context/AuthContext';
-import { LoginGateway } from './components/auth/LoginGateway';
+import { AuthProvider } from './context/AuthContext';
 import { UserStatusPill } from './components/auth/UserStatusPill';
 import './style.css';
 
 function AppContent() {
-  const { isAuthenticated, isAuthChecking } = useAuth();
-
   // Navigation Flow State:
   // 'selection' (Step 1: 3D Choice)
   // -> 'configuration' (Step 2: Server Config)
@@ -112,10 +109,8 @@ function AppContent() {
   }, []);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      loadData();
-    }
-  }, [isAuthenticated, loadData]);
+    loadData();
+  }, [loadData]);
 
   // Compute estate summary
   const overview = useMemo(() => {
@@ -249,31 +244,7 @@ function AppContent() {
     ? recommendations.find((r) => r.workload_id === selectedWorkload.id) || null
     : null;
 
-  // 1. Loading Authentication State
-  if (isAuthChecking) {
-    return (
-      <div className="loading-screen">
-        <div className="loading-spinner"></div>
-        <div className="loading-title">Verifying BUTANE Credentials...</div>
-        <div className="loading-subtitle">
-          Connecting to SkyCash sovereign authentication gateway
-        </div>
-      </div>
-    );
-  }
-
-  // 2. Unauthenticated: Render BUTANE 3D Login Gateway
-  if (!isAuthenticated) {
-    return (
-      <LoginGateway
-        onLoginSuccess={() => {
-          setCurrentScreen('selection');
-        }}
-      />
-    );
-  }
-
-  // 3. Authenticated: Loading Data State
+  // 1. Loading Data State
   if (isLoading || !dc || !depGraph || !overview) {
     return (
       <div className="loading-screen">

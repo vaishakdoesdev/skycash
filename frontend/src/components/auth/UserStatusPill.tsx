@@ -6,31 +6,19 @@ interface UserStatusPillProps {
 }
 
 export const UserStatusPill: React.FC<UserStatusPillProps> = ({ onOpenUploader }) => {
-  const { user, logout } = useAuth();
-  const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
+  const { user } = useAuth();
 
-  if (!user) return null;
-
-  const handleLogout = async () => {
-    setIsLoggingOut(true);
-    try {
-      await logout();
-    } finally {
-      setIsLoggingOut(false);
-    }
-  };
-
-  const initials = user.name
+  const initials = user?.name
     ? user.name
         .split(' ')
         .map((p) => p[0])
         .join('')
         .toUpperCase()
         .slice(0, 2)
-    : user.email.slice(0, 2).toUpperCase();
+    : 'SC';
 
   return (
-    <div className="butane-user-pill-container" title={`Signed in as ${user.email}`}>
+    <div className="butane-user-pill-container" title="SkyCash Decision Support Workspace">
       {onOpenUploader && (
         <button
           type="button"
@@ -59,29 +47,9 @@ export const UserStatusPill: React.FC<UserStatusPillProps> = ({ onOpenUploader }
       )}
       <div className="butane-user-avatar">{initials}</div>
       <div className="butane-user-details">
-        <span className="butane-user-team">BUTANE</span>
-        <span className="butane-user-email">{user.email}</span>
+        <span className="butane-user-team">SkyCash</span>
+        <span className="butane-user-email">{user?.email || 'Live Workspace'}</span>
       </div>
-      <button
-        type="button"
-        disabled={isLoggingOut}
-        onClick={handleLogout}
-        className="butane-logout-btn"
-        title="Sign out of SkyCash workspace"
-      >
-        {isLoggingOut ? (
-          '...'
-        ) : (
-          <>
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-            <span>Sign Out</span>
-          </>
-        )}
-      </button>
     </div>
   );
 };
